@@ -207,7 +207,7 @@ class UndoStack {
 
 
 
-// Submission Queue - Uses Queue
+// To-do List - Uses Queue
 
 class Submission {
     String description;
@@ -251,42 +251,42 @@ class SubmissionQueue {
 
 
 
-// Activities Catalog - Uses ArrayList
+// Course Load - Uses ArrayList
 
-class ActivitiesCatalog {
-    private ArrayList<String> activities = new ArrayList<>();
+class CoursesCatalog {
+    private ArrayList<String> courses = new ArrayList<>();
 
-    public void addActivity(String s) {
-        activities.add(s);
+    public void addCourse(String s) {
+        courses.add(s);
     }
 
-    public boolean upgradeActivity(String oldName, String newName) {
-        int i = activities.indexOf(oldName);
+    public boolean upgradeCourse(String oldName, String newName) {
+        int i = courses.indexOf(oldName);
         if (i != -1) {
-            activities.set(i, newName);
+            courses.set(i, newName);
             return true;
         }
         return false;
     }
 
-    public boolean removeActivity(String s) {
-        return activities.remove(s);
+    public boolean removeCourse(String s) {
+        return courses.remove(s);
     }
 
     public boolean search(String s) {
-        return activities.contains(s);
+        return courses.contains(s);
     }
 
     public void sort() {
-        Collections.sort(activities);
+        Collections.sort(courses);
     }
 
     public void display() {
-        System.out.println("\n--- Activities Catalog ---");
-        for (String s : activities) {
+        System.out.println("\n--- Course Load ---");
+        for (String s : courses) {
             System.out.println("- " + s);
         }
-        System.out.println("Total: " + activities.size());
+        System.out.println("Total: " + courses.size());
     }
 }
 
@@ -354,11 +354,11 @@ class MenuHandlers {
 
     public static void manageSubmissions(Scanner sc, SubmissionQueue submissions, UndoStack undo) {
         while (true) {
-            System.out.println("\n----- SUBMISSIONS QUEUE -----");
-            System.out.println("1. Add Submission");
-            System.out.println("2. Serve Next");
-            System.out.println("3. Peek Next");
-            System.out.println("4. Display All");
+            System.out.println("\n----- TO-DO LIST -----");
+            System.out.println("1. Add Activity");
+            System.out.println("2. Submit Current Activity");
+            System.out.println("3. Check Current Activity");
+            System.out.println("4. Display All Activities");
             System.out.println("5. Return to Main Menu");
 
             int t = InputHelper.safeIntInput(sc, 1, 5);
@@ -373,18 +373,18 @@ class MenuHandlers {
                     Submission submission = new Submission(d, pr);
                     submissions.addSubmission(submission);
 
-                    undo.push(new UndoAction("Add Submission " + d,
+                    undo.push(new UndoAction("Add Activity " + d,
                             () -> submissions.serve()));
                     break;
 
                 case 2:
                     Submission served = submissions.serve();
-                    System.out.println(served == null ? "No submissions available." : "Served: " + served);
+                    System.out.println(served == null ? "No activities available." : "Submitted: " + served);
                     break;
 
                 case 3:
                     Submission next = submissions.peek();
-                    System.out.println(next == null ? "No submissions." : "Next: " + next);
+                    System.out.println(next == null ? "No activities." : "Pending: " + next);
                     break;
 
                 case 4:
@@ -397,26 +397,26 @@ class MenuHandlers {
         }
     }
 
-    public static void manageActivities(Scanner sc, ActivitiesCatalog activities, UndoStack undo) {
+    public static void manageCourses(Scanner sc, CoursesCatalog courses, UndoStack undo) {
         while (true) {
-            System.out.println("\n----- ACTIVITIES CATALOG -----");
-            System.out.println("1. Add");
-            System.out.println("2. Upgrade");
-            System.out.println("3. Remove");
+            System.out.println("\n----- COURSE LOAD -----");
+            System.out.println("1. Add Course");
+            System.out.println("2. Update Course");
+            System.out.println("3. Remove Course");
             System.out.println("4. Search");
             System.out.println("5. Sort");
-            System.out.println("6. Display");
+            System.out.println("6. Display Courses");
             System.out.println("7. Return to Main Menu");
 
             int s = InputHelper.safeIntInput(sc, 1, 7);
 
             switch (s) {
                 case 1:
-                    System.out.print("Activity name: ");
+                    System.out.print("Course name: ");
                     String name = sc.nextLine();
-                    activities.addActivity(name);
-                    undo.push(new UndoAction("Add Activity " + name,
-                            () -> activities.removeActivity(name)));
+                    courses.addCourse(name);
+                    undo.push(new UndoAction("Add Course " + name,
+                            () -> courses.removeCourse(name)));
                     break;
 
                 case 2:
@@ -424,38 +424,38 @@ class MenuHandlers {
                     String oldN = sc.nextLine();
                     System.out.print("New name: ");
                     String newN = sc.nextLine();
-                    if (activities.upgradeActivity(oldN, newN)) {
-                        undo.push(new UndoAction("Upgrade Activity " + oldN,
-                                () -> activities.upgradeActivity(newN, oldN)));
+                    if (courses.upgradeCourse(oldN, newN)) {
+                        undo.push(new UndoAction("Update Course " + oldN,
+                                () -> courses.upgradeCourse(newN, oldN)));
                     } else {
-                        System.out.println("Activity not found.");
+                        System.out.println("Course not found.");
                     }
                     break;
 
                 case 3:
                     System.out.print("Name: ");
                     name = sc.nextLine();
-                    if (activities.removeActivity(name)) {
-                        undo.push(new UndoAction("Remove Activity " + name,
-                                () -> activities.addActivity(name)));
+                    if (courses.removeCourse(name)) {
+                        undo.push(new UndoAction("Remove Course " + name,
+                                () -> courses.addCourse(name)));
                     } else {
-                        System.out.println("Activity not found.");
+                        System.out.println("Course not found.");
                     }
                     break;
 
                 case 4:
                     System.out.print("Search: ");
                     name = sc.nextLine();
-                    System.out.println(activities.search(name) ? "Found." : "Not found.");
+                    System.out.println(courses.search(name) ? "Found." : "Not found.");
                     break;
 
                 case 5:
-                    activities.sort();
+                    courses.sort();
                     System.out.println("Sorted.");
                     break;
 
                 case 6:
-                    activities.display();
+                    courses.display();
                     break;
 
                 case 7:
@@ -497,7 +497,7 @@ public class Main {
         Scanner sc = new Scanner(System.in);
         StudentList student = new StudentList();
         SubmissionQueue submissions = new SubmissionQueue();
-        ActivitiesCatalog activities = new ActivitiesCatalog();
+        CoursesCatalog courses = new CoursesCatalog();
         UndoStack undo = new UndoStack();
         AccountVerifier auth = new AccountVerifier();
 
@@ -536,11 +536,11 @@ while (true) {
 
     while (authenticated) {
         System.out.println("\n---------------------------------------------------");
-        System.out.println("-------------CLASSROOM MANAGEMENT SYSTEM-------------");
-        System.out.println("-----------------------------------------------------");
+        System.out.println("------------CLASSROOM MANAGEMENT SYSTEM------------");
+        System.out.println("---------------------------------------------------");
         System.out.println("1. Manage Student");
-        System.out.println("2. Submission Queue");
-        System.out.println("3. Activities Catalog");
+        System.out.println("2. To-do List");
+        System.out.println("3. Course Load");
         System.out.println("4. Undo Options");
         System.out.println("5. Logout");
         System.out.println("6. Exit Program");
@@ -550,7 +550,7 @@ while (true) {
         switch (choice) {
             case 1: MenuHandlers.manageStudent(sc, student, undo); break;
             case 2: MenuHandlers.manageSubmissions(sc, submissions, undo); break;
-            case 3: MenuHandlers.manageActivities(sc, activities, undo); break;
+            case 3: MenuHandlers.manageCourses(sc, courses, undo); break;
             case 4: MenuHandlers.manageUndo(sc, undo); break;
 
             case 5:
@@ -566,6 +566,7 @@ while (true) {
         }
     }
 }
+
 
 
 
