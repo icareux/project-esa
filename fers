@@ -540,7 +540,7 @@ while (true) {
 
     while (authenticated) {
         System.out.println("\n---------------------------------------------------");
-        System.out.println("------------PROJECT MANAGEMENT SYSTEM------------");
+        System.out.println("-------------PROJECT MANAGEMENT SYSTEM-------------");
         System.out.println("---------------------------------------------------");
         System.out.println("1. Manage Team Member");
         System.out.println("2. Projects");
