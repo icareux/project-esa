@@ -54,7 +54,6 @@ class InputHelper {
     public static int safeIntInput(Scanner sc, int min, int max) {
         while (true) {
             try {
-                System.out.print("Choose option: ");
                 int num = Integer.parseInt(sc.nextLine());
                 if (num < min || num > max) {
                     System.out.println("Invalid choice! Enter a number between " + min + " and " + max + ".");
@@ -70,28 +69,28 @@ class InputHelper {
 
 
 
-// Student Management - Uses Linked List
+// Member Management - Uses Linked List
 
-class Student {
+class Member {
     String name;
-    Student next;
+    Member next;
 
-    public Student(String name) {
+    public Member(String name) {
         this.name = name;
     }
 }
 
-class StudentList {
-    private Student head;
+class MemberList {
+    private Member head;
 
     public void insert(String name, int index) {
-        Student newNode = new Student(name);
+        Member newNode = new Member(name);
         if (index == 0 || head == null) {
             newNode.next = head;
             head = newNode;
             return;
         }
-        Student temp = head;
+        Member temp = head;
         int i = 0;
         while (temp.next != null && i < index - 1) {
             temp = temp.next;
@@ -108,7 +107,7 @@ class StudentList {
             return true;
         }
 
-        Student temp = head;
+        Member temp = head;
         while (temp.next != null) {
             if (temp.next.name.equalsIgnoreCase(name)) {
                 temp.next = temp.next.next;
@@ -120,7 +119,7 @@ class StudentList {
     }
 
     public boolean search(String name) {
-        Student temp = head;
+        Member temp = head;
         while (temp != null) {
             if (temp.name.equalsIgnoreCase(name)) return true;
             temp = temp.next;
@@ -130,8 +129,8 @@ class StudentList {
 
     public void sort() {
         if (head == null) return;
-        for (Student i = head; i != null; i = i.next) {
-            for (Student j = i.next; j != null; j = j.next) {
+        for (Member i = head; i != null; i = i.next) {
+            for (Member j = i.next; j != null; j = j.next) {
                 if (i.name.compareToIgnoreCase(j.name) > 0) {
                     String t = i.name;
                     i.name = j.name;
@@ -143,7 +142,7 @@ class StudentList {
 
     public int count() {
         int c = 0;
-        Student temp = head;
+        Member temp = head;
         while (temp != null) {
             c++;
             temp = temp.next;
@@ -152,8 +151,8 @@ class StudentList {
     }
 
     public void display() {
-        System.out.println("\n--- Registered Student ---");
-        Student temp = head;
+        System.out.println("\n--- Registered Member ---");
+        Member temp = head;
         while (temp != null) {
             System.out.println("- " + temp.name);
             temp = temp.next;
@@ -209,10 +208,10 @@ class UndoStack {
 
 // To-do List - Uses Queue
 
-class Submission {
+class Task {
     String description;
     int priority;
-    public Submission(String description, int priority) {
+    public Task(String description, int priority) {
         this.description = description;
         this.priority = priority;
     }
@@ -221,29 +220,29 @@ class Submission {
     }
 }
 
-class SubmissionQueue {
-    private PriorityQueue<Submission> queue =
+class TaskQueue {
+    private PriorityQueue<Task> queue =
         new PriorityQueue<>((a, b) -> b.priority - a.priority);
 
-    public void addSubmission(Submission t) {
+    public void addTask(Task t) {
         queue.add(t);
     }
 
-    public Submission serve() {
+    public Task serve() {
         return queue.poll();
     }
 
-    public Submission peek() {
+    public Task peek() {
         return queue.peek();
     }
 
     public void display() {
-        System.out.println("\n--- Pending Submissions ---");
+        System.out.println("\n--- Pending Tasks ---");
         if (queue.isEmpty()) {
             System.out.println("(none)");
             return;
         }
-        for (Submission t : queue) {
+        for (Task t : queue) {
             System.out.println("- " + t);
         }
     }
@@ -253,40 +252,40 @@ class SubmissionQueue {
 
 // Course Load - Uses ArrayList
 
-class CoursesCatalog {
-    private ArrayList<String> courses = new ArrayList<>();
+class ProjectsCatalog {
+    private ArrayList<String> projects = new ArrayList<>();
 
     public void addCourse(String s) {
-        courses.add(s);
+        projects.add(s);
     }
 
     public boolean upgradeCourse(String oldName, String newName) {
-        int i = courses.indexOf(oldName);
+        int i = projects.indexOf(oldName);
         if (i != -1) {
-            courses.set(i, newName);
+            projects.set(i, newName);
             return true;
         }
         return false;
     }
 
     public boolean removeCourse(String s) {
-        return courses.remove(s);
+        return projects.remove(s);
     }
 
     public boolean search(String s) {
-        return courses.contains(s);
+        return projects.contains(s);
     }
 
     public void sort() {
-        Collections.sort(courses);
+        Collections.sort(projects);
     }
 
     public void display() {
         System.out.println("\n--- Course Load ---");
-        for (String s : courses) {
+        for (String s : projects) {
             System.out.println("- " + s);
         }
-        System.out.println("Total: " + courses.size());
+        System.out.println("Total: " + projects.size());
     }
 }
 
@@ -296,15 +295,16 @@ class CoursesCatalog {
 
 class MenuHandlers {
 
-    public static void manageStudent(Scanner sc, StudentList student, UndoStack undo) {
+    public static void manageMember(Scanner sc, MemberList member, UndoStack undo) {
         while (true) {
-            System.out.println("\n----- STUDENT MANAGEMENT -----");
-            System.out.println("1. Add Student");
-            System.out.println("2. Remove Student");
+            System.out.println("\n----- TEAM MEMBERS -----");
+            System.out.println("1. Add Member");
+            System.out.println("2. Remove Member");
             System.out.println("3. Search");
             System.out.println("4. Sort");
             System.out.println("5. Display All");
             System.out.println("6. Return to Main Menu");
+            System.out.println("Choose Option: ");
 
             int p = InputHelper.safeIntInput(sc, 1, 6);
 
@@ -315,17 +315,17 @@ class MenuHandlers {
                     System.out.print("Enter index number: ");
                     int idx = InputHelper.safeIntInput(sc, 0, 999);
 
-                    student.insert(name, idx);
-                    undo.push(new UndoAction("Add Student " + name,
-                            () -> student.remove(name)));
+                    member.insert(name, idx);
+                    undo.push(new UndoAction("Add Member " + name,
+                            () -> member.remove(name)));
                     break;
 
                 case 2:
                     System.out.print("Enter name: ");
                     name = sc.nextLine();
-                    if (student.remove(name)) {
-                        undo.push(new UndoAction("Remove Student " + name,
-                                () -> student.insert(name, 0)));
+                    if (member.remove(name)) {
+                        undo.push(new UndoAction("Remove Member " + name,
+                                () -> member.insert(name, 0)));
                     } else {
                         System.out.println("Name not found.");
                     }
@@ -334,16 +334,16 @@ class MenuHandlers {
                 case 3:
                     System.out.print("Search name: ");
                     name = sc.nextLine();
-                    System.out.println(student.search(name) ? "Found." : "Not found.");
+                    System.out.println(member.search(name) ? "Found." : "Not found.");
                     break;
 
                 case 4:
-                    student.sort();
+                    member.sort();
                     System.out.println("Sorted.");
                     break;
 
                 case 5:
-                    student.display();
+                    member.display();
                     break;
 
                 case 6:
@@ -352,14 +352,15 @@ class MenuHandlers {
         }
     }
 
-    public static void manageSubmissions(Scanner sc, SubmissionQueue submissions, UndoStack undo) {
+    public static void manageTasks(Scanner sc, TaskQueue tasks, UndoStack undo) {
         while (true) {
             System.out.println("\n----- TO-DO LIST -----");
-            System.out.println("1. Add Activity");
-            System.out.println("2. Submit Current Activity");
-            System.out.println("3. Check Current Activity");
-            System.out.println("4. Display All Activities");
+            System.out.println("1. Add Task");
+            System.out.println("2. Finish Earliest Task");
+            System.out.println("3. Check Earliest Task");
+            System.out.println("4. Display All Tasks");
             System.out.println("5. Return to Main Menu");
+            System.out.println("Choose Option: ");
 
             int t = InputHelper.safeIntInput(sc, 1, 5);
 
@@ -370,25 +371,25 @@ class MenuHandlers {
                     System.out.print("Priority (1-10): ");
                     int pr = InputHelper.safeIntInput(sc, 1, 10);
 
-                    Submission submission = new Submission(d, pr);
-                    submissions.addSubmission(submission);
+                    Task task = new Task(d, pr);
+                    tasks.addTask(task);
 
                     undo.push(new UndoAction("Add Activity " + d,
-                            () -> submissions.serve()));
+                            () -> tasks.serve()));
                     break;
 
                 case 2:
-                    Submission served = submissions.serve();
+                    Task served = tasks.serve();
                     System.out.println(served == null ? "No activities available." : "Submitted: " + served);
                     break;
 
                 case 3:
-                    Submission next = submissions.peek();
+                    Task next = tasks.peek();
                     System.out.println(next == null ? "No activities." : "Pending: " + next);
                     break;
 
                 case 4:
-                    submissions.display();
+                    tasks.display();
                     break;
 
                 case 5:
@@ -397,16 +398,17 @@ class MenuHandlers {
         }
     }
 
-    public static void manageCourses(Scanner sc, CoursesCatalog courses, UndoStack undo) {
+    public static void manageProjects(Scanner sc, ProjectsCatalog projects, UndoStack undo) {
         while (true) {
-            System.out.println("\n----- COURSE LOAD -----");
-            System.out.println("1. Add Course");
-            System.out.println("2. Update Course");
-            System.out.println("3. Remove Course");
+            System.out.println("\n----- PROJECTS -----");
+            System.out.println("1. Add Project");
+            System.out.println("2. Update Project");
+            System.out.println("3. Remove Project");
             System.out.println("4. Search");
             System.out.println("5. Sort");
-            System.out.println("6. Display Courses");
+            System.out.println("6. Display Projects");
             System.out.println("7. Return to Main Menu");
+            System.out.println("Choose Option: ");
 
             int s = InputHelper.safeIntInput(sc, 1, 7);
 
@@ -414,9 +416,9 @@ class MenuHandlers {
                 case 1:
                     System.out.print("Course name: ");
                     String name = sc.nextLine();
-                    courses.addCourse(name);
+                    projects.addCourse(name);
                     undo.push(new UndoAction("Add Course " + name,
-                            () -> courses.removeCourse(name)));
+                            () -> projects.removeCourse(name)));
                     break;
 
                 case 2:
@@ -424,9 +426,9 @@ class MenuHandlers {
                     String oldN = sc.nextLine();
                     System.out.print("New name: ");
                     String newN = sc.nextLine();
-                    if (courses.upgradeCourse(oldN, newN)) {
+                    if (projects.upgradeCourse(oldN, newN)) {
                         undo.push(new UndoAction("Update Course " + oldN,
-                                () -> courses.upgradeCourse(newN, oldN)));
+                                () -> projects.upgradeCourse(newN, oldN)));
                     } else {
                         System.out.println("Course not found.");
                     }
@@ -435,9 +437,9 @@ class MenuHandlers {
                 case 3:
                     System.out.print("Name: ");
                     name = sc.nextLine();
-                    if (courses.removeCourse(name)) {
+                    if (projects.removeCourse(name)) {
                         undo.push(new UndoAction("Remove Course " + name,
-                                () -> courses.addCourse(name)));
+                                () -> projects.addCourse(name)));
                     } else {
                         System.out.println("Course not found.");
                     }
@@ -446,16 +448,16 @@ class MenuHandlers {
                 case 4:
                     System.out.print("Search: ");
                     name = sc.nextLine();
-                    System.out.println(courses.search(name) ? "Found." : "Not found.");
+                    System.out.println(projects.search(name) ? "Found." : "Not found.");
                     break;
 
                 case 5:
-                    courses.sort();
+                    projects.sort();
                     System.out.println("Sorted.");
                     break;
 
                 case 6:
-                    courses.display();
+                    projects.display();
                     break;
 
                 case 7:
@@ -466,10 +468,11 @@ class MenuHandlers {
 
     public static void manageUndo(Scanner sc, UndoStack undo) {
         while (true) {
-            System.out.println("\n----- UNDO OPTIONS -----");
+            System.out.println("\n----- CHANGE LOG -----");
             System.out.println("1. Undo Recent");
             System.out.println("2. View Undo History");
             System.out.println("3. Return to Main Menu");
+            System.out.println("Choose Option: ");
 
             int u = InputHelper.safeIntInput(sc, 1, 3);
 
@@ -495,9 +498,9 @@ public class Main {
     public static void main(String[] args) {
 
         Scanner sc = new Scanner(System.in);
-        StudentList student = new StudentList();
-        SubmissionQueue submissions = new SubmissionQueue();
-        CoursesCatalog courses = new CoursesCatalog();
+        MemberList member = new MemberList();
+        TaskQueue tasks = new TaskQueue();
+        ProjectsCatalog projects = new ProjectsCatalog();
         UndoStack undo = new UndoStack();
         AccountVerifier auth = new AccountVerifier();
 
@@ -514,6 +517,7 @@ while (true) {
         System.out.println("1. Register");
         System.out.println("2. Login");
         System.out.println("3. Exit Program");
+        System.out.println("Choose Option: ");
 
         int opt = InputHelper.safeIntInput(sc, 1, 3);
 
@@ -536,21 +540,22 @@ while (true) {
 
     while (authenticated) {
         System.out.println("\n---------------------------------------------------");
-        System.out.println("------------CLASSROOM MANAGEMENT SYSTEM------------");
+        System.out.println("------------PROJECT MANAGEMENT SYSTEM------------");
         System.out.println("---------------------------------------------------");
-        System.out.println("1. Manage Student");
-        System.out.println("2. To-do List");
-        System.out.println("3. Course Load");
-        System.out.println("4. Undo Options");
+        System.out.println("1. Manage Team Member");
+        System.out.println("2. Projects");
+        System.out.println("3. Task Queue");
+        System.out.println("4. Change Log");
         System.out.println("5. Logout");
         System.out.println("6. Exit Program");
+        System.out.println("Choose Option: ");
 
         int choice = InputHelper.safeIntInput(sc, 1, 6);
 
         switch (choice) {
-            case 1: MenuHandlers.manageStudent(sc, student, undo); break;
-            case 2: MenuHandlers.manageSubmissions(sc, submissions, undo); break;
-            case 3: MenuHandlers.manageCourses(sc, courses, undo); break;
+            case 1: MenuHandlers.manageMember(sc, member, undo); break;
+            case 2: MenuHandlers.manageTasks(sc, tasks, undo); break;
+            case 3: MenuHandlers.manageProjects(sc, projects, undo); break;
             case 4: MenuHandlers.manageUndo(sc, undo); break;
 
             case 5:
@@ -566,6 +571,7 @@ while (true) {
         }
     }
 }
+
 
 
 
