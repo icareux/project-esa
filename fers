@@ -1,5 +1,10 @@
 import java.util.*;
-
+//Members
+//Belgira, JR
+//Nufable, Lorenzo
+//Pineda, Lyra
+//Tazan, John Lloyd
+//Tomambiling, Abby
 
 // User Login Menu - Uses HashMap
 
@@ -543,8 +548,8 @@ while (true) {
         System.out.println("-------------PROJECT MANAGEMENT SYSTEM-------------");
         System.out.println("---------------------------------------------------");
         System.out.println("1. Manage Team Member");
-        System.out.println("2. Projects");
-        System.out.println("3. Task Queue");
+        System.out.println("2. Task Queue");
+        System.out.println("3. Projects");
         System.out.println("4. Change Log");
         System.out.println("5. Logout");
         System.out.println("6. Exit Program");
@@ -571,7 +576,6 @@ while (true) {
         }
     }
 }
-
 
 
 
